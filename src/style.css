@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  transition: 30ms;
+}
+
+body {
+  font-family: Catamaran, sans-serif;
+  font-weight: 300;
+}
