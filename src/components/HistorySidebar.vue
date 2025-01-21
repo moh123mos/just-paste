@@ -3,7 +3,7 @@
   <div
     :style="{ width: sidebarWidth + 'px' }"
     v-if="clipboardData.length > 0"
-    class="flex-shrink-0 relative max-h-screen overflow-auto pt-5 md:pt-16 pb-12 border-s-0 border-t-2 md:border-t-0 md:border-s-2 border-[#f2f2f2] dark:border-[#3d3d3d]"
+    class="sm-w-full md:flex-shrink-0 relative max-h-screen overflow-auto pt-5 md:pt-16 pb-12 border-s-0 border-t-2 md:border-t-0 md:border-s-2 border-[#f2f2f2] dark:border-[#3d3d3d]"
   >
     <div
       class="p-4 hidden sm-w-full md:flex justify-between clipboardData-center fixed top-0 bg-background-light dark:bg-background-dark z-10"
@@ -12,7 +12,7 @@
       <p class="font-medium text-xl">History</p>
     </div>
     <!-- clipboardData of paste data -->
-    <div class="clipboardData px-3">
+    <div class="clipboardData px-3 bg-background-light dark:bg-background-dark">
       <div
         class="bg-[#f2f2f2] dark:bg-[#3d3d3d] rounded-md py-3 px-4 flex gap-3 justify-between clipboardData-center mb-5"
         v-for="(item, i) in clipboardData"
@@ -27,13 +27,13 @@
           class="accent-[#2d2d2d] dark:accent-[#ccc] rounded w-[30px] h-5"
         />
         <div
-          class="relative group overflow-hidden cursor-pointer"
+          class="relative sm-w-full group overflow-hidden cursor-pointer"
           @click="copyToClipboard(i)"
           :style="{ width: sidebarWidth - 30 + 'px' }"
         >
           <div
             :style="{ width: sidebarWidth - 170 + 'px' }"
-            class="content overflow-hidden text-nowrap text-ellipsis group-hover:opacity-0 duration-200"
+            class="content sm-w-full overflow-hidden text-nowrap text-ellipsis group-hover:opacity-0 duration-200"
           >
             {{ item.content }}
           </div>
@@ -65,7 +65,7 @@
     </div>
     <!-- clear clipboardData -->
     <div
-      class="fixed end-0 bottom-0 bg-background-light dark:bg-background-dark border-t-2 border-[#f2f2f2] dark:border-[#3d3d3d] p-3 flex justify-end gap-1"
+      class="fixed sm-w-full end-0 bottom-0 bg-background-light dark:bg-background-dark border-t-2 border-[#f2f2f2] dark:border-[#3d3d3d] p-3 flex justify-end gap-1"
       :style="{ width: sidebarWidth + 'px' }"
     >
       <button
@@ -84,7 +84,7 @@
     </div>
     <!-- Resizer -->
     <div
-      class="absolute top-0 start-0 w-[5px] h-full cursor-ew-resize"
+      class="sm-d-none absolute top-0 start-0 w-[5px] h-full cursor-ew-resize"
       @mousedown="startResizing"
     >
       <div class="resize-icon">
@@ -171,9 +171,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .sm-w-full {
     width: 100% !important;
+  }
+  .sm-d-none {
+    display: none !important;
   }
 }
 </style>
