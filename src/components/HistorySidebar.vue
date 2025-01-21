@@ -33,7 +33,7 @@
         >
           <div
             :style="{ width: sidebarWidth - 170 + 'px' }"
-            class="content sm-w-full overflow-hidden text-nowrap text-ellipsis group-hover:opacity-0 duration-200"
+            class="content text-sm md:text-base sm-w-full overflow-hidden text-nowrap text-ellipsis group-hover:opacity-0 duration-200"
           >
             {{ item.content }}
           </div>
@@ -84,7 +84,8 @@
     </div>
     <!-- Resizer -->
     <div
-      class="sm-d-none absolute top-0 start-0 w-[5px] h-full cursor-ew-resize"
+      class="sm-d-none fixed top-0  w-[2px] h-full cursor-ew-resize bg-[#f2f2f2] dark:bg-[#3d3d3d]"
+      :style="{ 'inset-inline-end': sidebarWidth - 2 + 'px' }"
       @mousedown="startResizing"
     >
       <div class="resize-icon">
