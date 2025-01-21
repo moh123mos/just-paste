@@ -2,20 +2,20 @@
   <!-- Sidebar -->
   <div
     :style="{ width: sidebarWidth + 'px' }"
-    v-if="items.length > 0"
+    v-if="clipboardData.length > 0"
     class="flex-shrink-0 relative max-h-screen overflow-auto pt-5 md:pt-16 pb-12 border-s-0 border-t-2 md:border-t-0 md:border-s-2 border-[#f2f2f2] dark:border-[#3d3d3d]"
   >
     <div
-      class="p-4 hidden sm-w-full md:flex justify-between items-center fixed top-0 bg-background-light dark:bg-background-dark z-10"
+      class="p-4 hidden sm-w-full md:flex justify-between clipboardData-center fixed top-0 bg-background-light dark:bg-background-dark z-10"
       :style="{ width: sidebarWidth - 30 + 'px' }"
     >
       <p class="font-medium text-xl">History</p>
     </div>
-    <!-- items of paste data -->
-    <div class="items px-3">
+    <!-- clipboardData of paste data -->
+    <div class="clipboardData px-3">
       <div
-        class="bg-[#f2f2f2] dark:bg-[#3d3d3d] rounded-md py-3 px-4 flex gap-3 justify-between items-center mb-5"
-        v-for="(item, i) in items"
+        class="bg-[#f2f2f2] dark:bg-[#3d3d3d] rounded-md py-3 px-4 flex gap-3 justify-between clipboardData-center mb-5"
+        v-for="(item, i) in clipboardData"
         :key="i"
       >
         <input
@@ -43,7 +43,7 @@
             {{ item.copyInfo }}
           </div>
         </div>
-        <div class="actions flex items-center gap-3">
+        <div class="actions flex clipboardData-center gap-3">
           <div class="copy" @click="copyToClipboard(i)">
             <Icon
               class="cursor-pointer text-background-dark dark:text-[#ccc]"
@@ -63,7 +63,7 @@
         </div>
       </div>
     </div>
-    <!-- clear items -->
+    <!-- clear clipboardData -->
     <div
       class="fixed end-0 bottom-0 bg-background-light dark:bg-background-dark border-t-2 border-[#f2f2f2] dark:border-[#3d3d3d] p-3 flex justify-end gap-1"
       :style="{ width: sidebarWidth + 'px' }"
@@ -98,8 +98,12 @@
 </template>
 
 <script setup>
-import { onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { Icon } from "@iconify/vue";
+
+import { useClipboardStore } from "../stores/clipboard";
+const clipboardStore = useClipboardStore();
+const clipboardData = computed(() => clipboardStore.data);
 
 // resizer
 const sidebarWidth = ref(440); // Initial sidebar width
@@ -135,39 +139,35 @@ onUnmounted(() => {
 });
 
 // copy operation
-const items = ref(
-  Array.from({ length: 8 }, () => ({
-    content: `ipsum dolor sit amet consectetur ipsum dolor sit amet consectetur,
-  ipsum dolor sit amet consectetur ipsum dolor sit amet consectetur,`,
-    copyInfo: "Copy!",
-    copyIcon: "mynaui:clipboard",
-    selected: false,
-  }))
-);
 const copyToClipboard = (i) => {
-  items.value[i].copyInfo = "Copyed!";
-  items.value[i].copyIcon = "fluent:clipboard-task-24-regular";
+  clipboardData.value[i].copyInfo = "Copied!";
+  clipboardData.value[i].copyIcon = "fluent:clipboard-task-24-regular";
+  navigator.clipboard.writeText(clipboardData.value[i].content);
   setTimeout(() => {
-    items.value[i].copyInfo = "Copy!";
-    items.value[i].copyIcon = "mynaui:clipboard";
+    clipboardData.value[i].copyInfo = "Copy!";
+    clipboardData.value[i].copyIcon = "mynaui:clipboard";
   }, 1000);
 };
-
 // delete
 const hasSelected = ref(false);
 const deleteItem = (i) => {
-  items.value.splice(i, 1);
+  clipboardData.value.splice(i, 1);
+  clipboardStore.deleteItem(i);
 };
 const clearSelected = () => {
-  items.value = items.value.filter((item) => !item.selected);
+  let filtered = clipboardData.value.filter((item) => !item.selected);
+  clipboardStore.setData(filtered);
   displayClearSelected();
 };
 const clearAll = () => {
-  items.value = [];
+  clipboardStore.deleteAll();
 };
 const displayClearSelected = () => {
-  hasSelected.value = items.value.some((item) => item.selected);
+  hasSelected.value = clipboardData.value.some((item) => item.selected);
 };
+onMounted(() => {
+  displayClearSelected();
+});
 </script>
 
 <style scoped>
